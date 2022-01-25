@@ -21,16 +21,16 @@
     <br><br><br><br><br>
     <div id="allthethings">
         <div id="left"></div>
-        <a href="/single">
+        <a href="${pageContext.request.contextPath}/play" >
             <div id="single" ><p>GIOCA</p></div>
         </a>
 
         <br><br>
-        <a href="/classifica">
+        <a href="${pageContext.request.contextPath}/classifica">
             <div id="options"><p>CLASSIFICA</p></div>
         </a>
         <br>
-        <a href="/info">
+        <a href="${pageContext.request.contextPath}/info.jsp" >
             <div id="credits"><p>INFO</p></div>
         </a>
         <div id="right"></div>

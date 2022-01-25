@@ -1,5 +1,8 @@
 package com.example.MCSite;
 
+import Classes.Email;
+import Classes.User;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,9 +25,15 @@ public class LoginServlet extends HttpServlet {
     {
         ResultSet resultSet = null;
         session = request.getSession();
-        String username,password;
+        String username,password,email,checkedUsername,checkedEmail;
         username=request.getParameter("username");
+        email=request.getParameter("email");
         password=request.getParameter("password");
+        checkedUsername=request.getParameter("userUsed");
+        checkedEmail=request.getParameter("emailUsed");
+
+
+
         session.setAttribute("username",username);
 
 
@@ -43,21 +52,63 @@ public class LoginServlet extends HttpServlet {
         try {
             Connection connection= DriverManager.getConnection(dbUrl,dbname,dbPassword);
             Statement statement=connection.createStatement();
-            String query="SELECT username,password from utente where utente.username = '"+username+"'";
-            resultSet=statement.executeQuery(query);
-            resultSet.next();
 
-            if(username.equals(resultSet.getString(1)) && password.equals(resultSet.getString(2)))
+            if(checkedEmail!=null)
             {
-                request.getRequestDispatcher("/map.jsp").forward(request,response);
-                System.out.println("accesso valido");
+                Email e1=new Email(email);
+                User user1= new User.UserBuilder(e1,password).buildEmail(e1,password);
+                System.out.println(user1.getEmail().getEmail());
+                String Useremail=user1.getEmail().getEmail();
+
+                System.out.println(Useremail+" "+user1.getPassword());
+
+                String query="SELECT email,password from utente where utente.email = '"+Useremail+"'";
+                resultSet=statement.executeQuery(query);
+                resultSet.next();
+
+                System.out.println(resultSet.getString(1));
+                System.out.println(resultSet.getString(2));
+
+
+                if(Useremail.equals(resultSet.getString(1)) && user1.getPassword().equals(resultSet.getString(2)))
+                {
+                    request.getRequestDispatcher("/play.jsp").forward(request,response);
+                    System.out.println("accesso valido");
+                }
+                else
+                {
+                    request.setAttribute("error","Errore, Riprova!");
+                    request.getRequestDispatcher("/login.jsp").forward(request,response);
+                    System.out.println("errore username o password");
+
+                }
             }
-            else
+            else if(checkedUsername!=null)
             {
-                request.getRequestDispatcher("/login.jsp").forward(request,response);
-                System.out.println("errore username o password");
+                User user1= new User.UserBuilder(username,password).buildUser(username,password);
+
+                String query="SELECT username,password from utente where utente.username = '"+user1.getUsername()+"'";
+                System.out.println(query);
+                resultSet=statement.executeQuery(query);
+                resultSet.next();
+
+                if(user1.getUsername().equals(resultSet.getString(1)) && user1.getPassword().equals(resultSet.getString(2)))
+                {
+                    request.getRequestDispatcher("/play.jsp").forward(request,response);
+                    System.out.println("accesso valido");
+                }
+                else
+                {
+                    request.setAttribute("error","Errore, Riprova!");
+                    request.getRequestDispatcher("/login.jsp").forward(request,response);
+                    System.out.println("errore username o password");
+
+                }
 
             }
+
+
+
         } catch (SQLException throwables) {
             System.out.println("Eccezione");
 

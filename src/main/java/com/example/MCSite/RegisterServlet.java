@@ -1,5 +1,8 @@
 package com.example.MCSite;
 
+import Classes.Email;
+import Classes.User;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -44,31 +47,59 @@ public class RegisterServlet extends HttpServlet {
         }
 
 
-        try {
-            Connection connection= DriverManager.getConnection(dbUrl,dbname,dbPassword);
+        try
+        {
+            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
 
-            PreparedStatement st = connection
-                    .prepareStatement("insert into utente values(?, ?, ?, ?)");
+            //controllo se username già presente
+            Statement statement = connection.createStatement();
 
-            st.setInt(1,NULL);
-            st.setString(2,username);
-            st.setString(3,email);
-            st.setString(4,password);
+            String query = "SELECT username from utente where utente.username = '" + username + "'";
 
-            st.executeUpdate();
-            st.close();
-            PrintWriter out = response.getWriter();
+            System.out.println(query);
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
 
-
-            out.println("<html><body><b>Successfully Inserted"
-                    + "</b></body></html>");
-
-
-            request.getRequestDispatcher("/login.jsp").forward(request,response);
-
-
-            } catch (SQLException e) {
+            if (checkusernameexists(connection,username))
+            {
+                request.setAttribute("error", "username già presente");
+                request.getRequestDispatcher("/register.jsp").forward(request, response);
+            }
+        } catch(SQLException e)
+        {
             e.printStackTrace();
+        }
+
+
+        try
+        {
+            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
+            Email e1=new Email(email);
+            User u=new User(username,e1,password);
+
+            if (!checkusernameexists(connection,username))
+            {
+                PreparedStatement st = connection
+                        .prepareStatement("insert into utente values(?, ?, ?, ?)");
+
+                st.setInt(1, NULL);
+                st.setString(2, u.getUsername());
+                st.setString(3, u.getEmail().getEmail());
+                st.setString(4, u.getPassword());
+
+                st.executeUpdate();
+                st.close();
+                PrintWriter out = response.getWriter();
+
+
+                out.println("<html><body><b>Successfully Inserted"
+                        + "</b></body></html>");
+
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+        } catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
         }
 
 
@@ -77,4 +108,30 @@ public class RegisterServlet extends HttpServlet {
 
     public void destroy() {
     }
+
+
+    public boolean checkusernameexists(Connection connection, String username) {
+        //controllo se username già presente
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            String query = "SELECT username from utente where utente.username = '" + username + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+            resultSet.next();
+            if (username.equals(resultSet.getString(1)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            System.err.println("Eccezione MYSQL");
+            return false;
+        }
+    }
+
 }

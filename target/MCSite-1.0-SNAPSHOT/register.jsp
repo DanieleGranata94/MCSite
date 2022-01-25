@@ -26,6 +26,7 @@
       <input type="submit" value="Registrati">
     </form>
 
+    <a>${error}</a>
 
     <div class="border-top pt-3">
       <small class="text-muted">

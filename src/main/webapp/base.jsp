@@ -12,7 +12,7 @@
 <header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand mr-4" href="/">Travel Game</a>
+            <a class="navbar-brand mr-4" href="/MCSite_war_exploded">Travel Game</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -22,10 +22,9 @@
                     <a class="nav-item nav-link active" href="/MCSite_war_exploded">Home</a>
                 </div>
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="/logout">Logout</a>
 
-                    <a class="nav-item nav-link" href="/login.jsp">Login</a>
-                    <a class="nav-item nav-link" href="/register">Registrati</a>
+                    <a class="nav-item nav-link" href="${pageContext.request.contextPath}/login.jsp">Login</a>
+                    <a class="nav-item nav-link" href="${pageContext.request.contextPath}/register">Registrati</a>
                 </div>
             </div>
         </div>
