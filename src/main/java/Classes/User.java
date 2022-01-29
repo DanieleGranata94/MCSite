@@ -2,6 +2,15 @@ package Classes;
 
 public class User
 {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private String username;
     private Email email;
     private String password;
@@ -11,6 +20,13 @@ public class User
         this.username=username;
         this.email=email;
         this.password=password;
+    }
+
+    public User(int id,String username,Email email)
+    {
+        this.id=id;
+        this.username=username;
+        this.email=email;
     }
 
     public User() {

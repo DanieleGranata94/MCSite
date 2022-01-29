@@ -1,5 +1,6 @@
 package com.example.MCSite;
 
+import Classes.Citta;
 import Classes.Email;
 import Classes.Quiz;
 import Classes.User;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -51,7 +53,8 @@ public class PlayServlet extends HttpServlet {
                 resultSet=statement.executeQuery(query);
 
 
-                ArrayList<String> citta=new ArrayList<>();
+                ArrayList<Citta> citta=new ArrayList<Citta>();
+
 
 
                 ResultSetMetaData rsmd = resultSet.getMetaData();
@@ -61,12 +64,14 @@ public class PlayServlet extends HttpServlet {
                     for (int i = 1; i <= columnsNumber; i++) {
                         if (i > 1) System.out.print(",  ");
                         String columnValue = resultSet.getString(i);
-                        citta.add(columnValue);
+                        citta.add(new Citta(columnValue));
                     }
                 }
 
 
-                session.setAttribute("citta",citta);
+
+                request.setAttribute("citta",citta);
+
 
 
 
@@ -85,4 +90,7 @@ public class PlayServlet extends HttpServlet {
 
     public void destroy() {
     }
+
+
+
 }

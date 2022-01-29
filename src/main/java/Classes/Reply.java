@@ -11,6 +11,20 @@ public class Reply
 
     private String reply;
 
+    public int getId() {
+        return Questionid;
+    }
+
+    public void setQuestionId(int id) {
+        this.Questionid = id;
+    }
+
+    private int Questionid;
+
+    public Reply() {
+
+    }
+
     public String getReply() {
         return reply;
     }

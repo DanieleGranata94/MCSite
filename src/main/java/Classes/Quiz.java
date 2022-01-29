@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 public class Quiz {
 
-    public Quiz (String city)
+    public Quiz (int id,String city)
     {
+        this.id=id;
         this.city=city;
     }
 
@@ -28,4 +29,14 @@ public class Quiz {
 
     private String city;
     private ArrayList<Question> questions;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
 }
