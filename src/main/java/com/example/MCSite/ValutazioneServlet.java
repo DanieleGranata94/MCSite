@@ -31,11 +31,41 @@ public class ValutazioneServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         Enumeration<String> check=request.getParameterNames();
+        String[] replies =request.getParameterValues("check");
 
-        System.out.println(java.util.Arrays.asList(check.nextElement()));
+        int punteggio=0;
+        int punteggiocomplessivo=0;
+        ArrayList<GivenReply> risposte_sbagliate=new ArrayList<>();
+
+        for(String reply:replies)
+        {
+            String[] replyparts = reply.split(":");
+            String question = replyparts[0];
+            String replyString = replyparts[1];
+            String esatto = replyparts[2];
+            if(Boolean.parseBoolean(esatto))
+            {
+                punteggio++;
+            }
+            else
+            {
+                GivenReply gr=new GivenReply(question,replyString,Boolean.parseBoolean(esatto));
+                risposte_sbagliate.add(gr);
+            }
+
+        }
+        punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
+
+        request.setAttribute("score",punteggiocomplessivo);
+
+        System.out.println("Punteggio complessivo: "+punteggiocomplessivo +"/10");
+
+        // query che ottiene le risposte giuste e metto a confronto le risposte date con quelle giuste creano un
+        // array di coppie. Dal lato frontend se sono uguali allora la dò come esatta se sono svagliate allora
+        // mostro la risposta data e quella esatta
+        //+ punteggio
 
 
-        System.out.println(check);
         request.getRequestDispatcher("/risultati.jsp").forward(request,response);
 
     }

@@ -30,7 +30,6 @@
   <table border="1" style="width: 99%; ">
 
 
-
   <% Quiz q = (Quiz) request.getAttribute("quiz"); %>
   <%
 
@@ -64,8 +63,7 @@
                   <tr>
                     <br>
                     <td>
-
-                      <input type="checkbox"  value='<%=qreply.getReply()%>' name="check" >
+                      <input type="checkbox"  value='<%=qvalue.getQuestion()%>:<%=qreply.getReply()%>:<%=qreply.isEsatto()%>' name="check">
                       <a><%=qreply.getReply()%></a>
                       </input>
 
