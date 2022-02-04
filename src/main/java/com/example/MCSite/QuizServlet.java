@@ -1,6 +1,6 @@
 package com.example.MCSite;
 
-import Classes.*;
+import Model.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static java.sql.Types.NULL;
 
@@ -29,7 +28,7 @@ public class QuizServlet extends HttpServlet {
 
 
         String citta=request.getParameter("cittaselect");
-        String username="erinnis"; // da risolvere
+        String username=request.getParameter("username");
         request.setAttribute("citta",citta);
 
 

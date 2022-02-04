@@ -1,6 +1,6 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Classes.Citta" %>
+<%@ page import="Model.Citta" %>
 
 
 <!DOCTYPE html>
@@ -17,13 +17,16 @@
 
 
 <br>
-<form action="quiz">
+<form action="quiz" >
 
   <h1 name ="username" value ="'${username}'">Benvenuto nel gioco ${username}</h1>
 
+    <input type="hidden" name="username" value="${username}">
 
 
-  <div class="content-section">
+
+
+    <div class="content-section">
       <h1>Seleziona la citta'</h1>
 
       <select name="cittaselect">

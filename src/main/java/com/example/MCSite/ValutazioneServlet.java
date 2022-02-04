@@ -1,6 +1,6 @@
 package com.example.MCSite;
 
-import Classes.*;
+import Model.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,10 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Enumeration;
-
-import static java.sql.Types.NULL;
 
 @WebServlet(name = "valutazione", value = "/valutazione")
 public class ValutazioneServlet extends HttpServlet {
@@ -30,29 +27,28 @@ public class ValutazioneServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        Enumeration<String> check=request.getParameterNames();
         String[] replies =request.getParameterValues("check");
+        ResultSet resultSet = null;
+        String citta=request.getParameter("citta");
 
         int punteggio=0;
         int punteggiocomplessivo=0;
-        ArrayList<GivenReply> risposte_sbagliate=new ArrayList<>();
+        ArrayList<GivenReply> risposte_date=new ArrayList<>();
 
         for(String reply:replies)
         {
             String[] replyparts = reply.split(":");
             String question = replyparts[0];
+            Question q1=new Question();
+            q1.setQuestion(question);
             String replyString = replyparts[1];
             String esatto = replyparts[2];
+            GivenReply gr=new GivenReply(q1,replyString,Boolean.parseBoolean(esatto));
             if(Boolean.parseBoolean(esatto))
             {
                 punteggio++;
             }
-            else
-            {
-                GivenReply gr=new GivenReply(question,replyString,Boolean.parseBoolean(esatto));
-                risposte_sbagliate.add(gr);
-            }
-
+            risposte_date.add(gr);
         }
         punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
 
@@ -60,10 +56,95 @@ public class ValutazioneServlet extends HttpServlet {
 
         System.out.println("Punteggio complessivo: "+punteggiocomplessivo +"/10");
 
-        // query che ottiene le risposte giuste e metto a confronto le risposte date con quelle giuste creano un
-        // array di coppie. Dal lato frontend se sono uguali allora la dò come esatta se sono svagliate allora
-        // mostro la risposta data e quella esatta
-        //+ punteggio
+        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
+        String dbname="root";
+        String dbPassword="";
+        String dbDriver="com.mysql.cj.jdbc.Driver";
+
+        try {
+            Class.forName(dbDriver);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            Connection connection= DriverManager.getConnection(dbUrl,dbname,dbPassword);
+            Statement statement=connection.createStatement();
+
+            String query="SELECT domanda,risposta FROM `reply` inner join domanda on domanda.id=reply.iddomanda" +
+                    " inner join quiz on quiz.id=domanda.idquiz where esatta=1 and quiz.citta='"+citta+"'";
+            resultSet=statement.executeQuery(query);
+
+
+            ResultSetMetaData rsmd2 = resultSet.getMetaData();
+            int columnsNumber = rsmd2.getColumnCount();
+            ArrayList<ReplyResult> repliesResult=new ArrayList<>();
+
+            while (resultSet.next())
+            {
+                ReplyResult replyresult=new ReplyResult();
+                for (int i = 1; i <= columnsNumber; i++)
+                {
+                    String columnname=rsmd2.getColumnName(i);
+                    String columnValue = resultSet.getString(i);
+                    if(columnname.equals("domanda"))
+                    {
+                        replyresult.setQuestion(columnValue);
+                    }
+
+                    if(columnname.equals("risposta"))
+                    {
+                        replyresult.setRightreply(columnValue);
+                    }
+                }
+                repliesResult.add(replyresult);
+            }
+
+
+            for(GivenReply risposta_data: risposte_date)
+            {
+                for(ReplyResult risultato_risposta: repliesResult)
+                {
+                    //System.out.println(risposta_data.getQuestion()+" "+risultato_risposta.getQuestion());
+
+                    if(risposta_data.getQuestion().getQuestion().equals(risultato_risposta.getQuestion()))
+                    {
+                        risultato_risposta.setGivenreply(risposta_data);
+                        if(risposta_data.getReply().equals(risultato_risposta.getRightreply()))
+                        {
+                            risultato_risposta.setEsatto(true);
+                        }
+                        else
+                        {
+                            risultato_risposta.setEsatto(false);
+                        }
+                    }
+                }
+
+            }
+
+            /*
+            for(ReplyResult risultato_risposta: repliesResult)
+            {
+                System.out.println("Domanda: "+risultato_risposta.getQuestion());
+                System.out.println("Risposta data: "+risultato_risposta.getGivenreply().getReply());
+                System.out.println("Risposta esatta: "+risultato_risposta.getRightreply());
+                System.out.println("Esatto?: "+risultato_risposta.isEsatto());
+            }
+            
+             */
+
+        request.setAttribute("risultati",repliesResult);
+
+        } catch (SQLException throwables) {
+            System.out.println("Eccezione");
+
+            throwables.printStackTrace();
+        }
+
+
+
 
 
         request.getRequestDispatcher("/risultati.jsp").forward(request,response);

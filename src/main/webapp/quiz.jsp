@@ -1,9 +1,9 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Classes.Citta" %>
-<%@ page import="Classes.Quiz" %>
-<%@ page import="Classes.Question" %>
-<%@ page import="Classes.Reply" %>
+<%@ page import="Model.Citta" %>
+<%@ page import="Model.Quiz" %>
+<%@ page import="Model.Question" %>
+<%@ page import="Model.Reply" %>
 
 
 <!DOCTYPE html>
@@ -21,13 +21,18 @@
 
 <br>
 
-  <h1>Cominciamo il quiz  ${username}! Per la citta ${citta}</h1>
 
 
 
 <form id="risposta"  method="POST" action="valutazione">
 
-  <table border="1" style="width: 99%; ">
+    <h1>Cominciamo il quiz  ${username}! Per la citta  ${citta}</h1>
+
+    <input type="hidden" name="citta" value="${citta}">
+
+
+
+    <table border="1" style="width: 99%; ">
 
 
   <% Quiz q = (Quiz) request.getAttribute("quiz"); %>
@@ -42,17 +47,17 @@
           %>
               <tr style="border-bottom: 1px solid #ddd" >
 
-        <br>
+
 
           <%
             Question qvalue = iterator.next(); //assign individual employee record to the employee class object
 
             Iterator<Reply> iteratorReply = qvalue.getReplies().iterator();  // Iterator interface
             %>
-                <td style="padding: 10px;" width="55%"><br>
+                <td style="padding: 10px;" width="55%">
                   <a name ="domanda"<%=qvalue.getId()%> value="<%=qvalue.getQuestion()%>"></a><b><%=qvalue.getQuestion()%></b></td>
 
-                <br>
+
 
                 <table style="width: 100%;">
                 <%
@@ -61,7 +66,7 @@
                Reply qreply = iteratorReply.next();
                 %>
                   <tr>
-                    <br>
+
                     <td>
                       <input type="checkbox"  value='<%=qvalue.getQuestion()%>:<%=qreply.getReply()%>:<%=qreply.isEsatto()%>' name="check">
                       <a><%=qreply.getReply()%></a>

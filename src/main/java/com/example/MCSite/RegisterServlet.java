@@ -1,7 +1,7 @@
 package com.example.MCSite;
 
-import Classes.Email;
-import Classes.User;
+import Model.Email;
+import Model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

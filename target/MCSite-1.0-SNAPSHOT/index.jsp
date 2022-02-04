@@ -21,7 +21,7 @@
     <br><br><br><br><br>
     <div id="allthethings">
         <div id="left"></div>
-        <a href="${pageContext.request.contextPath}/play" >
+        <a href="${pageContext.request.contextPath}/login.jsp" >
             <div id="single" ><p>GIOCA</p></div>
         </a>
 

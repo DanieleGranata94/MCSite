@@ -1,17 +1,17 @@
-package Classes;
+package Model;
 
 public class GivenReply extends Reply
 {
-    public String getQuestion() {
+    public Question getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
+    public void setQuestion(Question question) {
         this.question = question;
     }
 
-    private String question;
-    public GivenReply(String question,String reply, boolean esatto)
+    private Question question;
+    public GivenReply(Question question,String reply, boolean esatto)
     {
         super(reply, esatto);
         this.question=question;

@@ -1,4 +1,4 @@
-package Classes;
+package Model;
 
 public class Citta {
     public Citta(String citta) {

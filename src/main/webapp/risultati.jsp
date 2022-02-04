@@ -1,9 +1,9 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Classes.Citta" %>
-<%@ page import="Classes.Quiz" %>
-<%@ page import="Classes.Question" %>
-<%@ page import="Classes.Reply" %>
+<%@ page import="Model.Citta" %>
+<%@ page import="Model.Quiz" %>
+<%@ page import="Model.Question" %>
+<%@ page import="Model.Reply" %>
 
 
 <!DOCTYPE html>

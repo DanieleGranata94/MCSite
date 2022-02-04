@@ -1,8 +1,8 @@
 package com.example.MCSite;
 
-import Classes.Citta;
-import Classes.Email;
-import Classes.User;
+import Model.Citta;
+import Model.Email;
+import Model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -33,8 +33,6 @@ public class LoginServlet extends HttpServlet {
         password=request.getParameter("password");
         checkedUsername=request.getParameter("userUsed");
         checkedEmail=request.getParameter("emailUsed");
-
-
 
         session.setAttribute("username",username);
 

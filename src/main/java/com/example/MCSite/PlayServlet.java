@@ -1,9 +1,6 @@
 package com.example.MCSite;
 
-import Classes.Citta;
-import Classes.Email;
-import Classes.Quiz;
-import Classes.User;
+import Model.Citta;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
