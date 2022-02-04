@@ -52,7 +52,7 @@ public class ValutazioneServlet extends HttpServlet {
         }
         punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
 
-        request.setAttribute("score",punteggiocomplessivo);
+        request.setAttribute("punteggio",punteggiocomplessivo);
 
         System.out.println("Punteggio complessivo: "+punteggiocomplessivo +"/10");
 
@@ -132,7 +132,7 @@ public class ValutazioneServlet extends HttpServlet {
                 System.out.println("Risposta esatta: "+risultato_risposta.getRightreply());
                 System.out.println("Esatto?: "+risultato_risposta.isEsatto());
             }
-            
+
              */
 
         request.setAttribute("risultati",repliesResult);

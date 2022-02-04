@@ -1,9 +1,6 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Model.Citta" %>
-<%@ page import="Model.Quiz" %>
-<%@ page import="Model.Question" %>
-<%@ page import="Model.Reply" %>
+<%@ page import="Model.*" %>
 
 
 <!DOCTYPE html>
@@ -19,44 +16,71 @@
 
 <h1>RISULTATI</h1>
 <br><br>
-<form id="risposta" >
-
 
   <table border="1" style="width: 99%; ">
 
 
-    {% for risultato in risultati %}
+      <% ArrayList<ReplyResult> results = (ArrayList<ReplyResult>) request.getAttribute("risultati");
+    if(request.getAttribute("risultati") != null)
+    {
+        Iterator<ReplyResult> iterator = results.iterator();
+
+        while(iterator.hasNext())
+        {
+
+            ReplyResult rvalue = iterator.next();
+          %>
+
     <tr style="border-bottom: 1px solid #ddd" >
 
-      <td style="padding: 10px;" width="55%"><br><b>{{risultato[0]}}</b>
-        <br>
-        {% if( risultato[1]  ==  risultato[2] ) %}
 
-        <a style="color: green">La risposta era <b>{{risultato[1] }}</b>, risposta esatta!</a>
+      <td style="padding: 10px;" width="55%">
+        <b><%=rvalue.getQuestion()%></b>
+          <% if(rvalue.isEsatto())
+          {
+          %>
+        <a style="color: green">La risposta era <b><%=rvalue.getRightreply()%></b>, risposta esatta!</a>
 
-        {% else %}
-        <a style="color: red">Hai dato la risposta <b>{{ risultato[1] }} </b>, ma era <b>{{ risultato[2] }}</b></a>
+        <%
+        }
+        else
+        {
+        %>
+        <a style="color: red">Hai dato la risposta <b><%=rvalue.getGivenreply().getReply()%></b>, ma era <b><%=rvalue.getRightreply()%></b></a>
 
-
-        {% endif %}
-        <br>
+        <%
+        }%>
       </td>
-    </tr>
-    {% endfor %}
-  </table>
+
+
+        <%
+            }
+          }
+        %>
+      </table>
+<%int punteggio=(int)request.getAttribute("punteggio");
+  %>
+
   <br><br><br>
   <h3>
-    {% if( punteggio<=5 ) %}
-    Il tuo punteggio totale è: {{ punteggio }} / 10 , Puoi fare di meglio!
-    {% else %}
-    Il tuo punteggio totale è: {{ punteggio }} / 10 , Continua così!
-
-    {% endif %}
+<%
+  if(punteggio <= 5)
+    {
+%>
+    <a> Il tuo punteggio totale e': <%=punteggio%> / 10 , Puoi fare di meglio!</a>
+    <%
+    }
+  else
+    {
+    %>
+      <a>   Il tuo punteggio totale e': <%=punteggio%> / 10 , Continua cosi'!</a>
+    <%
+      }
+%>
   </h3>
 
 
 
-</form>
 
 
 
