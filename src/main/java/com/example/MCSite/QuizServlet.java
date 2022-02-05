@@ -68,11 +68,13 @@ public class QuizServlet extends HttpServlet {
             Quiz q=new Quiz(idquiz,citta);
 
 
-
-            Svolgimento_Quiz sq=new Svolgimento_Quiz(q,u);
+            String querySvolg="insert into Svolgimento_Quiz values(?, ?,?,?) ON DUPLICATE KEY UPDATE " +
+                    "idutente = "+ idutente+" and idquiz = "+idquiz+"";
 
             PreparedStatement st = connection
-                    .prepareStatement("insert into Svolgimento_Quiz values(?, ?,?,?)");
+                    .prepareStatement(querySvolg);
+
+            System.out.println(querySvolg);
 
             st.setInt(1, NULL);
             st.setInt(2, u.getId());
@@ -81,6 +83,9 @@ public class QuizServlet extends HttpServlet {
 
             st.executeUpdate();
             st.close();
+
+            request.setAttribute("idutente",u.getId());
+            request.setAttribute("idquiz",q.getId());
 
             //selezionare le domande di una determinata citta (con id)
 

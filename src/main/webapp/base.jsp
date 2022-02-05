@@ -23,7 +23,7 @@
                 </div>
                 <div class="navbar-nav">
 
-                    <a class="nav-item nav-link" href="${pageContext.request.contextPath}/register">Registrati</a>
+                    <a class="nav-item nav-link" href="${pageContext.request.contextPath}/register.jsp">Registrati</a>
                 </div>
             </div>
         </div>

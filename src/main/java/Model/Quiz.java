@@ -10,6 +10,10 @@ public class Quiz {
         this.city=city;
     }
 
+    public Quiz() {
+
+    }
+
 
     public String getCity() {
         return city;

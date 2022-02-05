@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 @WebServlet(name = "login", value = "/login")
 public class LoginServlet extends HttpServlet {
@@ -31,6 +35,8 @@ public class LoginServlet extends HttpServlet {
         username=request.getParameter("username");
         email=request.getParameter("email");
         password=request.getParameter("password");
+        password=hashSHA256(password);
+
         checkedUsername=request.getParameter("userUsed");
         checkedEmail=request.getParameter("emailUsed");
 
@@ -190,6 +196,23 @@ public class LoginServlet extends HttpServlet {
 
         return citta;
 
+    }
+
+    public static String hashSHA256(final String base) {
+        try{
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            final StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < hash.length; i++) {
+                final String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1)
+                    hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
     }
 
 }

@@ -29,6 +29,9 @@
     <h1>Cominciamo il quiz  ${username}! Per la citta  ${citta}</h1>
 
     <input type="hidden" name="citta" value="${citta}">
+    <input type="hidden" name="idutente" value="${idutente}">
+    <input type="hidden" name="idquiz" value="${idquiz}">
+
 
 
 

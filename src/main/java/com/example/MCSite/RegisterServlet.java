@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.Base64;
 
 import static java.sql.Types.NULL;
 
@@ -51,15 +55,6 @@ public class RegisterServlet extends HttpServlet {
         {
             Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
 
-            //controllo se username già presente
-            Statement statement = connection.createStatement();
-
-            String query = "SELECT username from utente where utente.username = '" + username + "'";
-
-            System.out.println(query);
-            resultSet = statement.executeQuery(query);
-            resultSet.next();
-
             if (checkusernameexists(connection,username))
             {
                 request.setAttribute("error", "username già presente");
@@ -75,6 +70,9 @@ public class RegisterServlet extends HttpServlet {
         {
             Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
             Email e1=new Email(email);
+
+            password=hashSHA256(password);
+
             User u=new User(username,e1,password);
 
             if (!checkusernameexists(connection,username))
@@ -92,8 +90,6 @@ public class RegisterServlet extends HttpServlet {
                 PrintWriter out = response.getWriter();
 
 
-                out.println("<html><body><b>Successfully Inserted"
-                        + "</b></body></html>");
 
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
@@ -117,8 +113,9 @@ public class RegisterServlet extends HttpServlet {
             statement = connection.createStatement();
             String query = "SELECT username from utente where utente.username = '" + username + "'";
             ResultSet resultSet = statement.executeQuery(query);
-            resultSet.next();
-            if (username.equals(resultSet.getString(1)))
+            boolean notexists=resultSet.next();
+
+            if (notexists)
             {
                 return true;
             }
@@ -131,6 +128,23 @@ public class RegisterServlet extends HttpServlet {
             throwables.printStackTrace();
             System.err.println("Eccezione MYSQL");
             return false;
+        }
+    }
+
+    public static String hashSHA256(final String base) {
+        try{
+            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            final byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            final StringBuilder hexString = new StringBuilder();
+            for (int i = 0; i < hash.length; i++) {
+                final String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1)
+                    hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch(Exception ex){
+            throw new RuntimeException(ex);
         }
     }
 

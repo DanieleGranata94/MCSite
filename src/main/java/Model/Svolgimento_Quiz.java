@@ -11,6 +11,10 @@ public class Svolgimento_Quiz
         this.user=user;
     }
 
+    public Svolgimento_Quiz() {
+
+    }
+
     public Quiz getQ() {
         return q;
     }

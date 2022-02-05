@@ -9,9 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+
+import static java.sql.Types.NULL;
 
 @WebServlet(name = "valutazione", value = "/valutazione")
 public class ValutazioneServlet extends HttpServlet {
@@ -30,6 +33,14 @@ public class ValutazioneServlet extends HttpServlet {
         String[] replies =request.getParameterValues("check");
         ResultSet resultSet = null;
         String citta=request.getParameter("citta");
+        String idutente=request.getParameter("idutente");
+        String idquiz=request.getParameter("idquiz");
+
+
+        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
+        String dbname="root";
+        String dbPassword="";
+        String dbDriver="com.mysql.cj.jdbc.Driver";
 
         int punteggio=0;
         int punteggiocomplessivo=0;
@@ -52,14 +63,62 @@ public class ValutazioneServlet extends HttpServlet {
         }
         punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
 
+
+        try {
+            Class.forName(dbDriver);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
+        try
+        {
+            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
+            Statement statement = connection.createStatement();
+
+            String query="SELECT punteggio from svolgimento_quiz where" +
+                    " svolgimento_quiz.idutente='"+idutente+"' and" +
+                    " svolgimento_quiz.idquiz='" + idquiz+"' order by punteggio DESC";
+
+            System.out.println(query);
+
+            resultSet=statement.executeQuery(query);
+            resultSet.next();
+
+            if(resultSet!=null && (Integer.parseInt(resultSet.getString(1)))<punteggiocomplessivo)
+            {
+                System.out.println(resultSet.getString(1));
+                try
+                {
+
+                    PreparedStatement st = connection
+                            .prepareStatement("UPDATE Svolgimento_Quiz SET punteggio = ? where idutente =? and idquiz = ?");
+                    st.setInt(1, punteggiocomplessivo);
+                    st.setInt(2, Integer.parseInt(idutente));
+                    st.setInt(3, Integer.parseInt(idquiz));
+                    st.executeUpdate();
+                    st.close();
+
+                } catch (SQLException throwables)
+                {
+                    throwables.printStackTrace();
+                }
+
+            }
+
+        } catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+        }
+
+
+
         request.setAttribute("punteggio",punteggiocomplessivo);
 
         System.out.println("Punteggio complessivo: "+punteggiocomplessivo +"/10");
 
-        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
-        String dbname="root";
-        String dbPassword="";
-        String dbDriver="com.mysql.cj.jdbc.Driver";
+
 
         try {
             Class.forName(dbDriver);
