@@ -18,6 +18,8 @@ import java.util.ArrayList;
 @WebServlet(name = "Classifica", value = "/classifica")
 public class ClassificaServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
 
 
@@ -25,21 +27,9 @@ public class ClassificaServlet extends HttpServlet {
 
         ResultSet resultSet = null;
 
-        String dbUrl = "jdbc:mysql://localhost:3306/mcsite";
-        String dbname = "root";
-        String dbPassword = "";
-        String dbDriver = "com.mysql.cj.jdbc.Driver";
-
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
 
         try
         {
-            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
             Statement statement = connection.createStatement();
 
 

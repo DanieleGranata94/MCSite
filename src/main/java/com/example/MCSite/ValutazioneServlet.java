@@ -19,6 +19,8 @@ import static java.sql.Types.NULL;
 @WebServlet(name = "valutazione", value = "/valutazione")
 public class ValutazioneServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
 
 
@@ -37,10 +39,7 @@ public class ValutazioneServlet extends HttpServlet {
         String idquiz=request.getParameter("idquiz");
 
 
-        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
-        String dbname="root";
-        String dbPassword="";
-        String dbDriver="com.mysql.cj.jdbc.Driver";
+
 
         int punteggio=0;
         int punteggiocomplessivo=0;
@@ -64,17 +63,11 @@ public class ValutazioneServlet extends HttpServlet {
         punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
 
 
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
 
 
         try
         {
-            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
             Statement statement = connection.createStatement();
 
             String query="SELECT punteggio from svolgimento_quiz where" +
@@ -120,15 +113,9 @@ public class ValutazioneServlet extends HttpServlet {
 
 
 
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
 
         try {
-            Connection connection= DriverManager.getConnection(dbUrl,dbname,dbPassword);
             Statement statement=connection.createStatement();
 
             String query="SELECT domanda,risposta FROM `reply` inner join domanda on domanda.id=reply.iddomanda" +

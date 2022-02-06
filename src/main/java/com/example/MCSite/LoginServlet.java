@@ -11,16 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Base64;
 
 @WebServlet(name = "login", value = "/login")
 public class LoginServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.err.println("Errore");
@@ -35,28 +33,14 @@ public class LoginServlet extends HttpServlet {
         username=request.getParameter("username");
         email=request.getParameter("email");
         password=request.getParameter("password");
-        password=hashSHA256(password);
+        password= Hashing.hashSHA256(password);
 
         checkedUsername=request.getParameter("userUsed");
         checkedEmail=request.getParameter("emailUsed");
 
         session.setAttribute("username",username);
 
-
-        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
-        String dbname="root";
-        String dbPassword="";
-        String dbDriver="com.mysql.cj.jdbc.Driver";
-
         try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            Connection connection= DriverManager.getConnection(dbUrl,dbname,dbPassword);
             Statement statement=connection.createStatement();
 
             if(checkedEmail!=null)
@@ -115,11 +99,7 @@ public class LoginServlet extends HttpServlet {
                     System.out.println("errore username o password");
 
                 }
-
             }
-
-
-
         } catch (SQLException throwables) {
             System.out.println("Eccezione");
 
@@ -146,30 +126,14 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         request.setAttribute("username", username);
 
-        String dbUrl = "jdbc:mysql://localhost:3306/mcsite";
-        String dbname = "root";
-        String dbPassword = "";
-        String dbDriver = "com.mysql.cj.jdbc.Driver";
-
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
+            connection = DatabaseConnection.getConnection();
             Statement statement = connection.createStatement();
             String query="SELECT citta from quiz";
             resultSet=statement.executeQuery(query);
 
-
             citta=new ArrayList<Citta>();
-
-
 
             ResultSetMetaData rsmd = resultSet.getMetaData();
             //scorro il resultset e metto le citta in un array
@@ -183,12 +147,6 @@ public class LoginServlet extends HttpServlet {
             }
 
 
-
-
-
-
-
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -198,21 +156,9 @@ public class LoginServlet extends HttpServlet {
 
     }
 
-    public static String hashSHA256(final String base) {
-        try{
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            final byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            final StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < hash.length; i++) {
-                final String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1)
-                    hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
-    }
+
+
+
+
 
 }

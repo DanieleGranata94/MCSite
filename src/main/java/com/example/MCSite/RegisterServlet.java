@@ -11,17 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
-import java.util.Base64;
 
+import static com.example.MCSite.Hashing.hashSHA256;
 import static java.sql.Types.NULL;
 
 @WebServlet(name = "register", value = "/register")
 public class RegisterServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.err.println("Errore");
@@ -39,36 +38,15 @@ public class RegisterServlet extends HttpServlet {
         session.setAttribute("username",username);
 
 
-        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
-        String dbname="root";
-        String dbPassword="";
-        String dbDriver="com.mysql.cj.jdbc.Driver";
-
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (checkusernameexists(connection,username))
+        {
+            request.setAttribute("error", "username già presente");
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
         }
 
 
         try
         {
-            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
-
-            if (checkusernameexists(connection,username))
-            {
-                request.setAttribute("error", "username già presente");
-                request.getRequestDispatcher("/register.jsp").forward(request, response);
-            }
-        } catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-
-        try
-        {
-            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
             Email e1=new Email(email);
 
             password=hashSHA256(password);
@@ -87,10 +65,6 @@ public class RegisterServlet extends HttpServlet {
 
                 st.executeUpdate();
                 st.close();
-                PrintWriter out = response.getWriter();
-
-
-
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
             }
         } catch (SQLException throwables)
@@ -131,21 +105,6 @@ public class RegisterServlet extends HttpServlet {
         }
     }
 
-    public static String hashSHA256(final String base) {
-        try{
-            final MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            final byte[] hash = digest.digest(base.getBytes("UTF-8"));
-            final StringBuilder hexString = new StringBuilder();
-            for (int i = 0; i < hash.length; i++) {
-                final String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1)
-                    hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch(Exception ex){
-            throw new RuntimeException(ex);
-        }
-    }
+
 
 }

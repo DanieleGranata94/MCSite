@@ -17,6 +17,8 @@ import static java.sql.Types.NULL;
 @WebServlet(name = "quiz", value = "/quiz")
 public class QuizServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
 
 
@@ -32,19 +34,9 @@ public class QuizServlet extends HttpServlet {
         request.setAttribute("citta",citta);
 
 
-        String dbUrl="jdbc:mysql://localhost:3306/mcsite";
-        String dbname="root";
-        String dbPassword="";
-        String dbDriver="com.mysql.cj.jdbc.Driver";
+
 
         try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Connection connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
             Statement statement = connection.createStatement();
 
             String query="SELECT id,username,email from utente where utente.username = '"+username+"'";

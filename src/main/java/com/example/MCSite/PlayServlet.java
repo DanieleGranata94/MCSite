@@ -15,6 +15,8 @@ import java.util.ArrayList;
 @WebServlet(name = "Play", value = "/play")
 public class PlayServlet extends HttpServlet {
     private HttpSession session;
+    static Connection connection= DatabaseConnection.getConnection();
+
 
 
 
@@ -28,22 +30,12 @@ public class PlayServlet extends HttpServlet {
         String username = request.getParameter("username");
         request.setAttribute("username", username);
 
-        String dbUrl = "jdbc:mysql://localhost:3306/mcsite";
-        String dbname = "root";
-        String dbPassword = "";
-        String dbDriver = "com.mysql.cj.jdbc.Driver";
 
-        try {
-            Class.forName(dbDriver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
 
 
             Connection connection = null;
             try {
-                connection = DriverManager.getConnection(dbUrl, dbname, dbPassword);
                 Statement statement = connection.createStatement();
                 String query="SELECT citta from quiz";
                 resultSet=statement.executeQuery(query);
