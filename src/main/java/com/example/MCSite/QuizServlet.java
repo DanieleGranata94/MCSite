@@ -26,14 +26,13 @@ public class QuizServlet extends HttpServlet {
         ResultSet resultSet = null;
         ResultSet resultSetQuiz = null;
         ResultSet resultSetRisposte = null;
+        ResultSet resultSetcheck = null;
 
 
 
         String citta=request.getParameter("cittaselect");
         String username=request.getParameter("username");
         request.setAttribute("citta",citta);
-
-
 
 
         try {
@@ -59,22 +58,28 @@ public class QuizServlet extends HttpServlet {
 
             Quiz q=new Quiz(idquiz,citta);
 
+            String checkInsertString="select * from Svolgimento_Quiz where "+"idutente = "+ idutente+" and idquiz = "+idquiz+"";
 
-            String querySvolg="insert into Svolgimento_Quiz values(?, ?,?,?) ON DUPLICATE KEY UPDATE " +
-                    "idutente = "+ idutente+" and idquiz = "+idquiz+"";
+            resultSetcheck=statement.executeQuery(checkInsertString);
+            if(!resultSetcheck.next())
+            {
 
-            PreparedStatement st = connection
-                    .prepareStatement(querySvolg);
+                String querySvolg = "insert into Svolgimento_Quiz values(?, ?,?,?) ON DUPLICATE KEY UPDATE " +
+                        "idutente = " + idutente + " and idquiz = " + idquiz + "";
 
-            System.out.println(querySvolg);
+                PreparedStatement st = connection
+                        .prepareStatement(querySvolg);
 
-            st.setInt(1, NULL);
-            st.setInt(2, u.getId());
-            st.setInt(3, q.getId());
-            st.setInt(4, NULL);
+                System.out.println(querySvolg);
 
-            st.executeUpdate();
-            st.close();
+                st.setInt(1, NULL);
+                st.setInt(2, u.getId());
+                st.setInt(3, q.getId());
+                st.setInt(4, 0);
+
+                st.executeUpdate();
+                st.close();
+            }
 
             request.setAttribute("idutente",u.getId());
             request.setAttribute("idquiz",q.getId());
@@ -188,6 +193,9 @@ public class QuizServlet extends HttpServlet {
                 }
                 questions.get(i).setReplies(repliesPerQuestion);
             }
+
+
+
 
 /*
             for(int i=0;i<questions.size();i++)

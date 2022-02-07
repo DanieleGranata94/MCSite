@@ -31,9 +31,6 @@ public class PlayServlet extends HttpServlet {
         request.setAttribute("username", username);
 
 
-
-
-
             Connection connection = null;
             try {
                 Statement statement = connection.createStatement();

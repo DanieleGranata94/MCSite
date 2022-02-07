@@ -62,9 +62,8 @@ public class LoginServlet extends HttpServlet {
 
                 if(Useremail.equals(resultSet.getString(1)) && user1.getPassword().equals(resultSet.getString(2)))
                 {
-                    PlayServlet ps=new PlayServlet();
-                    ps.doGet(request,response);
-
+                    ArrayList<Citta> citta=GeneraCitta(request,response);
+                    request.setAttribute("citta",citta);
                     request.getRequestDispatcher("/play.jsp").forward(request,response);
                     System.out.println("accesso valido");
                 }
@@ -87,6 +86,7 @@ public class LoginServlet extends HttpServlet {
 
                 if(user1.getUsername().equals(resultSet.getString(1)) && user1.getPassword().equals(resultSet.getString(2)))
                 {
+
                     ArrayList<Citta> citta=GeneraCitta(request,response);
                     request.setAttribute("citta",citta);
                     request.getRequestDispatcher("/play.jsp").forward(request,response);

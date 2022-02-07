@@ -60,9 +60,10 @@ public class ValutazioneServlet extends HttpServlet {
             }
             risposte_date.add(gr);
         }
-        punteggiocomplessivo=(int)(((float)punteggio/(float)replies.length)*10);
 
+        punteggiocomplessivo=(int)(((float)punteggio/(float)(replies.length-1))*10);
 
+     
 
 
 

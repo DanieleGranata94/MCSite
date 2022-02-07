@@ -7,15 +7,13 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     public static Connection con = null;
+    public static final String dbUrl = "jdbc:mysql://localhost:3306/mcsite";
+    public static final String dbname = "root";
+    public static final String dbPassword = "";
+    public static final String dbDriver = "com.mysql.cj.jdbc.Driver";
 
-    static
+    public static Connection getConnection()
     {
-
-        String dbUrl = "jdbc:mysql://localhost:3306/mcsite";
-        String dbname = "root";
-        String dbPassword = "";
-        String dbDriver = "com.mysql.cj.jdbc.Driver";
-
         try {
             Class.forName(dbDriver);
             con = DriverManager.getConnection(dbUrl, dbname, dbPassword);
@@ -23,9 +21,6 @@ public class DatabaseConnection {
         catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-    }
-    public static Connection getConnection()
-    {
         return con;
     }
 }
