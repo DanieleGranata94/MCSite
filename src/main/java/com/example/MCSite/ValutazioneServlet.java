@@ -19,7 +19,7 @@ import static java.sql.Types.NULL;
 @WebServlet(name = "valutazione", value = "/valutazione")
 public class ValutazioneServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
 
 
@@ -63,7 +63,7 @@ public class ValutazioneServlet extends HttpServlet {
 
         punteggiocomplessivo=(int)(((float)punteggio/(float)(replies.length-1))*10);
 
-     
+
 
 
 

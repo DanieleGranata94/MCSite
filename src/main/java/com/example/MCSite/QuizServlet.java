@@ -17,7 +17,7 @@ import static java.sql.Types.NULL;
 @WebServlet(name = "quiz", value = "/quiz")
 public class QuizServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
 
 

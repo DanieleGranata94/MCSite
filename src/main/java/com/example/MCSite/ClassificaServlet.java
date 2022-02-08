@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @WebServlet(name = "Classifica", value = "/classifica")
 public class ClassificaServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
 
 

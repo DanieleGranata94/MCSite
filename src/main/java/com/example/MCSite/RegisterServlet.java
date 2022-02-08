@@ -19,7 +19,7 @@ import static java.sql.Types.NULL;
 @WebServlet(name = "register", value = "/register")
 public class RegisterServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

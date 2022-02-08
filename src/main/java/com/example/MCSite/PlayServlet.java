@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @WebServlet(name = "Play", value = "/play")
 public class PlayServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
 
 
@@ -31,7 +31,7 @@ public class PlayServlet extends HttpServlet {
         request.setAttribute("username", username);
 
 
-            Connection connection = null;
+            Connection connection = DatabaseConnection.getInstance().getConnection();
             try {
                 Statement statement = connection.createStatement();
                 String query="SELECT citta from quiz";

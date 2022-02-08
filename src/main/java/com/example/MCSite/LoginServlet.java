@@ -17,8 +17,7 @@ import java.util.ArrayList;
 @WebServlet(name = "login", value = "/login")
 public class LoginServlet extends HttpServlet {
     private HttpSession session;
-    static Connection connection= DatabaseConnection.getConnection();
-
+    static Connection connection= DatabaseConnection.getInstance().getConnection();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.err.println("Errore");
@@ -128,7 +127,7 @@ public class LoginServlet extends HttpServlet {
 
         Connection connection = null;
         try {
-            connection = DatabaseConnection.getConnection();
+            connection = DatabaseConnection.getInstance().getConnection();
             Statement statement = connection.createStatement();
             String query="SELECT citta from quiz";
             resultSet=statement.executeQuery(query);
